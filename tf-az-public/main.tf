@@ -126,7 +126,8 @@ resource "azurerm_linux_virtual_machine" "tf-vm" {
   admin_ssh_key {
     username   = each.value.user
     # generate with "ssh-keygen"
-    public_key = file("~/.ssh/id_rsa.pub")
+    # public_key = file("~/.ssh/id_rsa.pub")
+    public_key = each.value.pubkey
   }
 
   os_disk {

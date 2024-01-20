@@ -30,6 +30,7 @@ variable "vm_map" {
     name      = string
     size      = string
     user      = string
+    pubkey    = string
     publisher = string
     offer     = string
     sku       = string
@@ -41,6 +42,7 @@ variable "vm_map" {
       name      = "vm-osw-1"
       size      = "Standard_D4ds_v5"
       user      = "ubuntu"
+      pubkey    = "ssh-rsa ..."
       publisher = "Canonical"
       offer     = "0001-com-ubuntu-server-jammy"
       sku       = "22_04-lts-gen2"
