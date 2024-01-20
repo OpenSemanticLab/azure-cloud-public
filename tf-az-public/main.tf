@@ -157,3 +157,8 @@ resource "local_file" "tf-vm-pubip" {
   content  = azurerm_linux_virtual_machine.tf-vm[each.key].public_ip_address
   filename = "${path.module}/inventory/${each.value.name}.txt"
 }
+
+# Create outputs
+output "instance_ip_addr" {
+  value = { for k, v in azurerm_linux_virtual_machine.tf-vm : k => v.public_ip_address }
+}
