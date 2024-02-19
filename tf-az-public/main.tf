@@ -1,5 +1,9 @@
 # main.tf
 
+# Authors: 
+#   Andreas Raeder, https://github.com/raederan 
+#   Simon Stier, https://github.com/simontaurus
+
 # Configure Azure provider source and version
 terraform {
   required_providers {

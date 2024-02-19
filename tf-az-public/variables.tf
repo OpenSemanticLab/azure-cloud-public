@@ -1,5 +1,9 @@
 # variables.tf
 
+# Authors: 
+#   Andreas Raeder, https://github.com/raederan 
+#   Simon Stier, https://github.com/simontaurus
+
 # Resource Group Name
 variable "rg_name" {
   type    = string
