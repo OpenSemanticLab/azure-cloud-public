@@ -83,7 +83,8 @@ resource "azurerm_subnet_network_security_group_association" "tf-subnet-nsg" {
 
 # Create a public ip
 resource "azurerm_public_ip" "tf-pubip" {
-  for_each = var.vm_map
+  # New public ip only if ip argument in vm_map is empty
+  for_each = { for k, v in var.vm_map : k => v if v.ip == "" }
 
   name                = "${each.value.name}-pubip"
   allocation_method   = var.pubip_allocation_method
@@ -107,7 +108,8 @@ resource "azurerm_network_interface" "tf-nic" {
     name                          = "${each.value.name}-ipconfig"
     subnet_id                     = azurerm_subnet.tf-subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = each.value.ip != "" ? each.value.ip : azurerm_public_ip.tf-pubip[each.key].id
+    # New public ip only if ip argument in vm_map is empty
+    public_ip_address_id          = each.value.ip == "" ? azurerm_public_ip.tf-pubip[each.key].id : each.value.ip
   }
 
   tags = {
@@ -128,15 +130,15 @@ resource "azurerm_linux_virtual_machine" "tf-vm" {
   network_interface_ids = [azurerm_network_interface.tf-nic[each.key].id]
 
   admin_ssh_key {
-    username   = each.value.user
-    # generate with "ssh-keygen"
-    # public_key = file("~/.ssh/id_rsa.pub")
-    public_key = each.value.pubkey
+    username = each.value.user
+    # Use default ssh key if pubkey argument in vm_map is empty
+    public_key = each.value.pubkey == "" ? file("~/.ssh/id_rsa.pub") : each.value.pubkey
   }
 
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
+    disk_size_gb         = each.value.disk_size_gb
   }
 
   source_image_reference {
